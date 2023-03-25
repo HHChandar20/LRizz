@@ -1,26 +1,29 @@
 #include "raylib.h"
+#include <iostream>
 
-int main(void)
+using namespace std;
+
+const int width = 1920;
+const int height = 1080;
+
+
+int main()
 {
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+	InitWindow(width, height, "Chemistry game");
+	SetTargetFPS(60);
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+	Texture2D background = LoadTexture("../assets/background.png");
 
-    SetTargetFPS(60);
+	while (!WindowShouldClose())
+	{
+		BeginDrawing();
+		ClearBackground(WHITE);
 
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
+		DrawTexture(background, 0, 0, WHITE);
 
-        ClearBackground(RAYWHITE);
+		EndDrawing();
+	}
 
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+	CloseWindow();
 
-        EndDrawing();
-    }
-
-    CloseWindow();
-
-    return 0;
 }
