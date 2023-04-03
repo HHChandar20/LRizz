@@ -562,3 +562,9 @@ void Game::drawMusicPlayer()
 		DrawTexture(repeat, 0, 0, WHITE);
 	}
 }
+
+void Game::drawPeriodicTable()
+{
+	isMenuOpened = 1;
+	DrawTexture(periodicTableTexture, 0, 0, WHITE);
+}
