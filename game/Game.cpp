@@ -354,3 +354,12 @@ void Game::moveCharacter()
 		inCollision = 0;
 	}
 }
+
+void Game::drawBackground()
+{
+	if (!onFire)
+	{
+		ClearBackground(WHITE);
+		DrawTexture(background, 0, 0, WHITE);
+	}
+}
