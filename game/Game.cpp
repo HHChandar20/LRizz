@@ -161,3 +161,196 @@ void Game::load()
 		}
 	}
 }
+
+void Game::unload()
+{
+	for (int i = 0; i < 22; i++)
+	{
+		UnloadTexture(elements[i]);
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		if (i != 7)
+		{
+			UnloadTexture(onFireTextures[i]);
+		}
+
+		UnloadTexture(idle[i]);
+		UnloadTexture(idleBox[i]);
+		UnloadTexture(fireExtinguisher[i]);
+		UnloadTexture(interact[i]);
+		UnloadTexture(moveLeft[i]);
+		UnloadTexture(moveRight[i]);
+		UnloadTexture(moveUp[i]);
+		UnloadTexture(moveDown[i]);
+		UnloadTexture(moveDownLeft[i]);
+		UnloadTexture(moveDownRight[i]);
+		UnloadTexture(moveUpRight[i]);
+		UnloadTexture(moveUpLeft[i]);
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		UnloadTexture(react[i]);
+	}
+
+	UnloadTexture(inventory);
+	UnloadTexture(yourOrder);
+	UnloadTexture(chemistryShelfTexture);
+	UnloadTexture(background);
+	UnloadTexture(walls);
+	UnloadTexture(periodicTableTexture);
+	UnloadTexture(repeat);
+	UnloadTexture(mailboxOrderTexture);
+
+	for (int i = 0; i < 2; i++)
+	{
+		UnloadTexture(packageMenu[i]);
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			UnloadTexture(musicCovers[i][j]);
+		}
+	}
+}
+
+void Game::moveCharacter()
+{
+
+	animationTimer += GetFrameTime();
+	if (animationTimer >= 0.04f) // Make the animation slower
+	{
+		animationTimer = 0.0f;
+
+		if (frame == 7)
+		{
+			frame = 0;
+		}
+		else
+		{
+			frame++;
+		}
+
+		if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A) && IsKeyUp(KEY_S) && IsKeyUp(KEY_D) && !isMenuOpened)
+		{
+			for (int i = 0; i < 35; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[0][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.x -= 15;
+				character.y -= 15;
+			}
+		}
+		else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A) && IsKeyUp(KEY_W) && IsKeyUp(KEY_D) && !isMenuOpened)
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[1][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.x -= 15;
+				character.y += 15;
+			}
+		}
+		else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D) && IsKeyUp(KEY_W) && IsKeyUp(KEY_A) && !isMenuOpened)
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[2][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.x += 15;
+				character.y += 15;
+			}
+		}
+		else if (IsKeyDown(KEY_W) && IsKeyDown(KEY_D) && IsKeyUp(KEY_A) && IsKeyUp(KEY_S) && !isMenuOpened)
+		{
+			for (int i = 0; i < 35; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[3][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.x += 15;
+				character.y -= 15;
+			}
+		}
+		else if (IsKeyDown(KEY_S) && IsKeyUp(KEY_D) && IsKeyUp(KEY_A) && IsKeyUp(KEY_W) && !isMenuOpened)
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[4][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.y += 20;
+			}
+		}
+		else if (IsKeyDown(KEY_A) && IsKeyUp(KEY_S) && IsKeyUp(KEY_D) && IsKeyUp(KEY_W) && !isMenuOpened)
+		{
+			for (int i = 0; i < 26; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[5][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.x -= 20;
+			}
+		}
+		else if (IsKeyDown(KEY_D) && IsKeyUp(KEY_S) && IsKeyUp(KEY_A) && IsKeyUp(KEY_W) && !isMenuOpened)
+		{
+			for (int i = 0; i < 25; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[6][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.x += 20;
+			}
+		}
+		else if (IsKeyDown(KEY_W) && IsKeyUp(KEY_S) && IsKeyUp(KEY_A) && IsKeyUp(KEY_D) && !isMenuOpened)
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				if (CheckCollisionPointRec(character, collisions[7][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character.y -= 20;
+			}
+		}
+		inCollision = 0;
+	}
+}
