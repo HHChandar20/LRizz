@@ -371,3 +371,39 @@ void Game::drawWalls()
 		DrawTexture(walls, 0, 0, WHITE);
 	}
 }
+
+void Game::drawCharacterAnimations()
+{
+	if (IsKeyDown(KEY_W) && IsKeyDown(KEY_D))
+	{
+		DrawTexture(moveUpRight[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A))
+	{
+		DrawTexture(moveUpLeft[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D))
+	{
+		DrawTexture(moveDownRight[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A))
+	{
+		DrawTexture(moveDownLeft[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_D))
+	{
+		DrawTexture(moveRight[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_A))
+	{
+		DrawTexture(moveLeft[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_W))
+	{
+		DrawTexture(moveUp[frame], character.x, character.y, WHITE);
+	}
+	else if (IsKeyDown(KEY_S))
+	{
+		DrawTexture(moveDown[frame], character.x, character.y, WHITE);
+	}
+}
