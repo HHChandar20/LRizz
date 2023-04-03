@@ -406,4 +406,17 @@ void Game::drawCharacterAnimations()
 	{
 		DrawTexture(moveDown[frame], character.x, character.y, WHITE);
 	}
+	else if (isCarryingBox)
+	{
+		if (character.x >= 500 && character.x <= 560 && character.y >= 900 && character.y <= 1180)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				mailbox = !mailbox;
+			}
+		}
+		DrawTexture(idleBox[frame], character.x, character.y, WHITE);
+	}
 }
