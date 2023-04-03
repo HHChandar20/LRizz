@@ -363,3 +363,11 @@ void Game::drawBackground()
 		DrawTexture(background, 0, 0, WHITE);
 	}
 }
+
+void Game::drawWalls()
+{
+	if (!onFire)
+	{
+		DrawTexture(walls, 0, 0, WHITE);
+	}
+}
