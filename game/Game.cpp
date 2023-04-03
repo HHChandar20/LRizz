@@ -597,5 +597,36 @@ void Game::drawChemistryShelf()
 			}
 		}
 	}
-	
+	else
+	{
+		isMenuOpened = 1;
+
+		if (selectedElement != -1)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				if (GetMouseX() >= 460 + i * 171 && GetMouseX() <= 600 + i * 171 && GetMouseY() >= 850 && GetMouseY() <= 970)
+				{
+					inventoryElements[i] = selectedElement;
+				}
+			}
+		}
+
+		selectedElement = -1;
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (i != selectedElement)
+		{
+			DrawTexture(elements[i], 483 + i * 171, 428, WHITE);
+		}
+	}
+
+	drawInventory();
+
+	if (selectedElement != -1)
+	{
+		DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+	}
 }
