@@ -946,3 +946,11 @@ void Game::drawMailbox()
 		DrawTexture(elements[orderElement], 910, 530, WHITE);
 	}
 }
+
+void Game::drawOrderMenu()
+{
+	DrawTexture(yourOrder, 0, 0, WHITE);
+	DrawTexture(elements[orderElement], 910, 530, WHITE);
+
+	drawInventory();
+}
