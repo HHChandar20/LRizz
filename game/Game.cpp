@@ -419,4 +419,14 @@ void Game::drawCharacterAnimations()
 		}
 		DrawTexture(idleBox[frame], character.x, character.y, WHITE);
 	}
+	else if (isCarryingExtinguisher && IsKeyDown(KEY_E))
+	{
+		DrawTexture(fireExtinguisher[frame], character.x, character.y, WHITE);
+		extinguishTime += GetFrameTime();
+		if (extinguishTime >= 5.0f)
+		{
+			isCarryingExtinguisher = 0;
+			onFire = 0;
+		}
+	}
 }
