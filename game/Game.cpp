@@ -861,3 +861,22 @@ void Game::drawReactor()
 		}
 	}
 }
+
+void Game::drawPackageMenu()
+{
+	if (!packageClosed)
+	{
+		DrawTexture(packageMenu[0], 0, 0, WHITE);
+	}
+	else
+	{
+		DrawTexture(packageMenu[1], 0, 0, WHITE);
+		if (IsKeyPressed(KEY_R))
+		{
+			isCarryingBox = 1;
+			packaging = 0;
+		}
+	}
+
+	
+}
