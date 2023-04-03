@@ -542,10 +542,23 @@ void Game::drawMusicPlayer()
 	{
 		repeatMusic = !repeatMusic;
 	}
-	
+	if (IsKeyPressed(KEY_Q))
+	{
+		StopMusicStream(music[musicIndex]);
+		randomMusic = rand() % 5;
+
+		while (randomMusic == musicIndex)
+		{
+			randomMusic = rand() % 5;
+		}
+		musicIndex = randomMusic;
+		pauseMusic = 0;
+
+		PlayMusicStream(music[musicIndex]);
+	}
+
 	if (repeatMusic)
 	{
 		DrawTexture(repeat, 0, 0, WHITE);
 	}
 }
-
