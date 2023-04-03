@@ -492,13 +492,25 @@ void Game::drawCharacterAnimations()
 	}
 }
 
+void Game::isMusicPaused()
+{
+	if (pauseMusic) PauseMusicStream(music[musicIndex]);
+	else ResumeMusicStream(music[musicIndex]);
+}
+
 void Game::drawMusicPlayer()
 {
 	isMenuOpened = 1;
 
 	DrawTexture(musicCovers[pauseMusic][musicIndex], 0, 0, WHITE);
 
-	if (IsKeyPressed(KEY_RIGHT))
+	timePlayed = GetMusicTimePlayed(music[musicIndex]) / GetMusicTimeLength(music[musicIndex]);
+
+	if (IsKeyPressed(KEY_P))
+	{
+		pauseMusic = !pauseMusic;
+	}
+	if (IsKeyPressed(KEY_RIGHT) || (timePlayed >= 0.999f && !repeatMusic))
 	{
 		StopMusicStream(music[musicIndex]);
 		if (musicIndex != 4)
@@ -509,6 +521,7 @@ void Game::drawMusicPlayer()
 		{
 			musicIndex = 0;
 		}
+		pauseMusic = 0;
 		PlayMusicStream(music[musicIndex]);
 	}
 	if (IsKeyPressed(KEY_LEFT))
@@ -522,7 +535,17 @@ void Game::drawMusicPlayer()
 		{
 			musicIndex = 4;
 		}
+		pauseMusic = 0;
 		PlayMusicStream(music[musicIndex]);
 	}
+	if (IsKeyPressed(KEY_R))
+	{
+		repeatMusic = !repeatMusic;
+	}
 	
+	if (repeatMusic)
+	{
+		DrawTexture(repeat, 0, 0, WHITE);
+	}
 }
+
