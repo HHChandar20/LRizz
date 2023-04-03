@@ -928,3 +928,21 @@ void Game::drawPackageMenu()
 		DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
 	}
 }
+
+void Game::drawMailbox()
+{
+	if (isCarryingBox)
+	{
+		isCarryingBox = 0;
+		mailbox = 0;
+		packageElement = -1;
+		packageClosed = 0;
+		orderElement = rand() % 22;
+	}
+	else
+	{
+		isMenuOpened = 1;
+		DrawTexture(mailboxOrderTexture, 0, 0, WHITE);
+		DrawTexture(elements[orderElement], 910, 530, WHITE);
+	}
+}
