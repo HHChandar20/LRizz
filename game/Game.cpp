@@ -954,3 +954,8 @@ void Game::drawOrderMenu()
 
 	drawInventory();
 }
+
+void Game::drawOnFireAnimation()
+{
+	DrawTexture(onFireTextures[frame], 0, 0, fire[frame]);
+}
