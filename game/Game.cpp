@@ -581,3 +581,21 @@ void Game::drawInventory()
 		}
 	}
 }
+
+void Game::drawChemistryShelf()
+{
+	isMenuOpened = 1;
+	DrawTexture(chemistryShelfTexture, 0, 0, WHITE);
+
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			if (GetMouseX() >= 475 + i * 171 && GetMouseX() <= 590 + i * 171 && GetMouseY() >= 400 && GetMouseY() <= 510 && selectedElement == -1)
+			{
+				selectedElement = i;
+			}
+		}
+	}
+	
+}
