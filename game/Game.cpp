@@ -568,3 +568,16 @@ void Game::drawPeriodicTable()
 	isMenuOpened = 1;
 	DrawTexture(periodicTableTexture, 0, 0, WHITE);
 }
+
+void Game::drawInventory()
+{
+	DrawTexture(inventory, 0, 0, WHITE);
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (inventoryElements[i] != -1)
+		{
+			DrawTexture(elements[inventoryElements[i]], 483 + i * 171, 895, WHITE);
+		}
+	}
+}
