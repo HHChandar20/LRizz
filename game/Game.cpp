@@ -955,7 +955,11 @@ void Game::drawOrderMenu()
 	drawInventory();
 }
 
-<<<<<<< HEAD
+void Game::drawOnFireAnimation()
+{
+	DrawTexture(onFireTextures[frame], 0, 0, fire[frame]);
+}
+
 void Game::loop()
 {
 	UpdateMusicStream(music[musicIndex]);
@@ -1011,9 +1015,4 @@ void Game::loop()
 	{
 		drawOrderMenu();
 	}
-=======
-void Game::drawOnFireAnimation()
-{
-	DrawTexture(onFireTextures[frame], 0, 0, fire[frame]);
->>>>>>> 8e03d816b24c678586823a172ca2418715b5c835
 }
