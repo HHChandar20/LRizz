@@ -429,4 +429,65 @@ void Game::drawCharacterAnimations()
 			onFire = 0;
 		}
 	}
+	else
+	{
+		if (character.x >= 800 && character.x <= 920 && character.y >= 580 && character.y <= 700)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				periodicTable = !periodicTable;
+			}
+		}
+		else if (character.x >= 1400 && character.x <= 1500 && character.y >= 60 && character.y <= 120)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				musicPlayer = !musicPlayer;
+			}
+		}
+		else if (character.x >= 1000 && character.x <= 1190 && character.y >= 580 && character.y <= 720)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				chemistryShelf = !chemistryShelf;
+			}
+		}
+		else if (character.x >= -50 && character.x <= 50 && character.y >= 650 && character.y <= 720)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				reactor = !reactor;
+			}
+		}
+		else if (character.x >= 880 && character.x <= 1080 && character.y >= 250 && character.y <= 370)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				packaging = !packaging;
+			}
+		}
+		else if (character.x >= 500 && character.x <= 560 && character.y >= 900 && character.y <= 1180)
+		{
+			DrawTexture(interact[frame], character.x, character.y, WHITE);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				mailbox = !mailbox;
+			}
+		}
+		else
+		{
+			DrawTexture(idle[frame], character.x, character.y, WHITE);
+		}
+	}
 }
