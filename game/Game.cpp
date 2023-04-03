@@ -759,5 +759,105 @@ void Game::drawReactor()
 		reaction[1] = -1;
 	}
 
-	
+	DrawTexture(inventory, 370, -450, WHITE);
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (i != inventoryIndex && inventoryElements[i] != -1)
+		{
+			DrawTexture(elements[inventoryElements[i]], 853 + i * 171, 446, WHITE);
+		}
+	}
+
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			if (GetMouseX() >= 845 + i * 170 && GetMouseX() <= 960 + i * 170 && GetMouseY() >= 400 && GetMouseY() <= 510 && selectedElement == -1 && inventoryElements[i] != -1)
+			{
+				selectedElement = inventoryElements[i];
+				inventoryElements[i] = -1;
+				inventoryIndex = i;
+			}
+		}
+
+		if (GetMouseX() >= 370 && GetMouseX() <= 510 && GetMouseY() >= 725 && GetMouseY() <= 865 && selectedElement == -1)
+		{
+
+			selectedElement = reaction[2];
+		}
+	}
+	else
+	{
+		if (selectedElement != -1)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				if (GetMouseX() >= 360 && GetMouseX() <= 525 && GetMouseY() >= 290 + i * 185 && GetMouseY() <= 425 + i * 185 && (i == 0 || i == 1))
+				{
+					if (selectedElement == reaction[2])
+					{
+						reaction[2] = -1;
+					}
+					else
+					{
+						inventoryElements[inventoryIndex] = -1;
+					}
+					reaction[i] = selectedElement;
+				}
+				else if (GetMouseX() >= 830 + i * 170 && GetMouseX() <= 975 + i * 170 && GetMouseY() >= 400 && GetMouseY() <= 510)
+				{
+
+					if (inventoryElements[i] == -1)
+					{
+						inventoryElements[i] = selectedElement;
+						if (selectedElement == reaction[2])
+						{
+							reaction[2] = -1;
+						}
+					}
+					else
+					{
+						inventoryElements[inventoryIndex] = selectedElement;
+					}
+				}
+			}
+
+		}
+		selectedElement = -1;
+		inventoryIndex = -1;
+	}
+
+	if (IsKeyDown(KEY_R))
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			reaction[i] = -1;
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		if (reaction[i] != -1)
+		{
+			DrawTexture(elements[reaction[i]], 392, 328 + i * 185, WHITE);
+		}
+	}
+
+	if (reaction[2] != -1 && selectedElement != reaction[2])
+	{
+		DrawTexture(elements[reaction[2]], 392, 765, WHITE);
+	}
+
+	if (selectedElement != -1)
+	{
+		if (inventoryIndex != -1)
+		{
+			DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+		}
+		else
+		{
+			DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+		}
+	}
 }
