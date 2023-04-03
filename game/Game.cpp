@@ -954,3 +954,60 @@ void Game::drawOrderMenu()
 
 	drawInventory();
 }
+
+void Game::loop()
+{
+	UpdateMusicStream(music[musicIndex]);
+	if (!onFire)
+	{
+		drawBackground();
+	}
+	moveCharacter();
+	if (onFire)
+	{
+		drawOnFireAnimation();
+	}
+	drawCharacterAnimations();
+	isMusicPaused();
+	isMenuOpened = 0;
+
+	if (!onFire)
+	{
+		drawWalls();
+	}
+	if (musicPlayer)
+	{
+		drawMusicPlayer();
+	}
+	if (periodicTable)
+	{
+		drawPeriodicTable();
+	}
+	if (chemistryShelf)
+	{
+		drawChemistryShelf();
+	}
+	if (reactor)
+	{
+		drawReactor();
+	}
+	if (packaging)
+	{
+		drawPackageMenu();
+	}
+	if (mailbox)
+	{
+		drawMailbox();
+	}
+
+	if (IsKeyPressed(KEY_Z))
+	{
+		isCarryingExtinguisher = 1;
+		onFire = 1;
+	}
+
+	if (IsKeyDown(KEY_TAB) && !isMenuOpened)
+	{
+		drawOrderMenu();
+	}
+}
