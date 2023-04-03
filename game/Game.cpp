@@ -878,5 +878,53 @@ void Game::drawPackageMenu()
 		}
 	}
 
-	
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			if (GetMouseX() >= 460 + i * 171 && GetMouseX() <= 600 + i * 171 && GetMouseY() >= 850 && GetMouseY() <= 970 && selectedElement == -1 && inventoryElements[i] != -1)
+			{
+				selectedElement = inventoryElements[i];
+				inventoryElements[i] = -1;
+				inventoryIndex = i;
+			}
+		}
+	}
+	else
+	{
+		if (selectedElement != -1)
+		{
+			if (GetMouseX() >= 895 && GetMouseX() <= 1030 && GetMouseY() >= 155 && GetMouseY() <= 290 && !packageClosed)
+			{
+				inventoryElements[inventoryIndex] = packageElement;
+				packageElement = selectedElement;
+			}
+			else
+			{
+				inventoryElements[inventoryIndex] = selectedElement;
+			}
+		}
+
+		selectedElement = -1;
+		inventoryIndex = -1;
+	}
+
+	drawInventory();
+
+	if (packageElement != -1)
+	{
+		if (IsKeyPressed(KEY_F))
+		{
+			packageClosed = !packageClosed;
+		}
+		if (!packageClosed)
+		{
+			DrawTexture(elements[packageElement], 913, 193, WHITE);
+		}
+	}
+
+	if (selectedElement != -1)
+	{
+		DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+	}
 }
