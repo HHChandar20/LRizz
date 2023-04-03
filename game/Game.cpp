@@ -581,3 +581,376 @@ void Game::drawInventory()
 		}
 	}
 }
+
+void Game::drawChemistryShelf()
+{
+	isMenuOpened = 1;
+	DrawTexture(chemistryShelfTexture, 0, 0, WHITE);
+
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			if (GetMouseX() >= 475 + i * 171 && GetMouseX() <= 590 + i * 171 && GetMouseY() >= 400 && GetMouseY() <= 510 && selectedElement == -1)
+			{
+				selectedElement = i;
+			}
+		}
+	}
+	else
+	{
+		isMenuOpened = 1;
+
+		if (selectedElement != -1)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				if (GetMouseX() >= 460 + i * 171 && GetMouseX() <= 600 + i * 171 && GetMouseY() >= 850 && GetMouseY() <= 970)
+				{
+					inventoryElements[i] = selectedElement;
+				}
+			}
+		}
+
+		selectedElement = -1;
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (i != selectedElement)
+		{
+			DrawTexture(elements[i], 483 + i * 171, 428, WHITE);
+		}
+	}
+
+	drawInventory();
+
+	if (selectedElement != -1)
+	{
+		DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+	}
+}
+
+void Game::drawReactor()
+{
+	isMenuOpened = 1;
+	DrawTexture(react[0], 0, 0, WHITE);
+
+	if (((IsMouseButtonDown(MOUSE_BUTTON_LEFT) && GetMouseX() >= 770 && GetMouseX() <= 1000 && GetMouseY() >= 760 && GetMouseY() <= 870) || IsKeyDown(KEY_SPACE)) && selectedElement == -1)
+	{
+		DrawTexture(react[1], 0, 0, WHITE);
+	}
+	else if (((IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && GetMouseX() >= 770 && GetMouseX() <= 1000 && GetMouseY() >= 760 && GetMouseY() <= 870) || IsKeyReleased(KEY_SPACE)) && selectedElement == -1)
+	{
+		if ((reaction[0] == 0 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 0))
+		{
+			reaction[2] = 19; //NaH
+		}
+		else if ((reaction[0] == 0 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 0))
+		{
+			reaction[2] = 6; //H2O
+		}
+		else if ((reaction[0] == 0 && reaction[1] == 3) || (reaction[0] == 3 && reaction[1] == 0))
+		{
+			reaction[2] = 8; //H2S
+		}
+		else if ((reaction[0] == 0 && reaction[1] == 4) || (reaction[0] == 4 && reaction[1] == 0))
+		{
+			reaction[2] = 14; //NH3
+		}
+		else if ((reaction[0] == 0 && reaction[1] == 5) || (reaction[0] == 5 && reaction[1] == 0))
+		{
+			reaction[2] = 7; //HCl
+		}
+		else if ((reaction[0] == 1 && reaction[1] == 3) || (reaction[0] == 3 && reaction[1] == 1))
+		{
+			reaction[2] = 16; //Na2S
+		}
+		else if ((reaction[0] == 1 && reaction[1] == 5) || (reaction[0] == 5 && reaction[1] == 1))
+		{
+			reaction[2] = 18; //NaCl
+		}
+		else if ((reaction[0] == 2 && reaction[1] == 3) || (reaction[0] == 3 && reaction[1] == 2))
+		{
+			reaction[2] = 9; //SO2
+		}
+		else if ((reaction[0] == 2 && reaction[1] == 4) || (reaction[0] == 4 && reaction[1] == 2))
+		{
+			reaction[2] = 13; //NO2
+		}
+		else if ((reaction[0] == 6 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 6))
+		{
+			reaction[2] = 20; //NaOH
+		}
+		else if ((reaction[0] == 6 && reaction[1] == 3) || (reaction[0] == 3 && reaction[1] == 6))
+		{
+			reaction[2] = 8; //H2S
+		}
+		else if ((reaction[0] == 7 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 7))
+		{
+			reaction[2] = 18; //NaCl
+		}
+		else if ((reaction[0] == 7 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 7))
+		{
+			reaction[2] = 6; //H2O
+		}
+		else if ((reaction[0] == 7 && reaction[1] == 3) || (reaction[0] == 3 && reaction[1] == 7))
+		{
+			reaction[2] = 8; //H2S
+		}
+		else if ((reaction[0] == 8 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 8))
+		{
+			reaction[2] = 16; //Na2S
+		}
+		else if ((reaction[0] == 8 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 8))
+		{
+			reaction[2] = 9; //SO2
+		}
+		else if ((reaction[0] == 8 && reaction[1] == 5) || (reaction[0] == 5 && reaction[1] == 8))
+		{
+			reaction[2] = 7; //HCl
+		}
+		else if ((reaction[0] == 9 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 9))
+		{
+			reaction[2] = 10; //SO3
+		}
+		else if ((reaction[0] == 10 && reaction[1] == 0) || (reaction[0] == 0 && reaction[1] == 10))
+		{
+			reaction[2] = 11; //H2SO3
+		}
+		else if ((reaction[0] == 11 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 11))
+		{
+			reaction[2] = 12; //H2SO4
+		}
+		else if ((reaction[0] == 12 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 12))
+		{
+			reaction[2] = 17; //Na2SO4
+		}
+		else if ((reaction[0] == 13 && reaction[1] == 0) || (reaction[0] == 0 && reaction[1] == 13))
+		{
+			reaction[2] = 14; //NH3
+		}
+		else if ((reaction[0] == 13 && reaction[1] == 6) || (reaction[0] == 6 && reaction[1] == 13))
+		{
+			reaction[2] = 15; //HNO3
+		}
+		else if ((reaction[0] == 14 && reaction[1] == 5) || (reaction[0] == 5 && reaction[1] == 14))
+		{
+			reaction[2] = 21; //NH4Cl
+		}
+		else if ((reaction[0] == 16 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 16))
+		{
+			reaction[2] = 17; //Na2SO4
+		}
+		else if ((reaction[0] == 19 && reaction[1] == 2) || (reaction[0] == 2 && reaction[1] == 19))
+		{
+			reaction[2] = 20; //NaOH
+		}
+		else if ((reaction[0] == 19 && reaction[1] == 3) || (reaction[0] == 3 && reaction[1] == 19))
+		{
+			reaction[2] = 16; //Na2S
+		}
+		else if ((reaction[0] == 20 && reaction[1] == 5) || (reaction[0] == 5 && reaction[1] == 20))
+		{
+			reaction[2] = 18; //NaCl
+		}
+
+		reaction[0] = -1;
+		reaction[1] = -1;
+	}
+
+	DrawTexture(inventory, 370, -450, WHITE);
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (i != inventoryIndex && inventoryElements[i] != -1)
+		{
+			DrawTexture(elements[inventoryElements[i]], 853 + i * 171, 446, WHITE);
+		}
+	}
+
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			if (GetMouseX() >= 845 + i * 170 && GetMouseX() <= 960 + i * 170 && GetMouseY() >= 400 && GetMouseY() <= 510 && selectedElement == -1 && inventoryElements[i] != -1)
+			{
+				selectedElement = inventoryElements[i];
+				inventoryElements[i] = -1;
+				inventoryIndex = i;
+			}
+		}
+
+		if (GetMouseX() >= 370 && GetMouseX() <= 510 && GetMouseY() >= 725 && GetMouseY() <= 865 && selectedElement == -1)
+		{
+
+			selectedElement = reaction[2];
+		}
+	}
+	else
+	{
+		if (selectedElement != -1)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				if (GetMouseX() >= 360 && GetMouseX() <= 525 && GetMouseY() >= 290 + i * 185 && GetMouseY() <= 425 + i * 185 && (i == 0 || i == 1))
+				{
+					if (selectedElement == reaction[2])
+					{
+						reaction[2] = -1;
+					}
+					else
+					{
+						inventoryElements[inventoryIndex] = -1;
+					}
+					reaction[i] = selectedElement;
+				}
+				else if (GetMouseX() >= 830 + i * 170 && GetMouseX() <= 975 + i * 170 && GetMouseY() >= 400 && GetMouseY() <= 510)
+				{
+
+					if (inventoryElements[i] == -1)
+					{
+						inventoryElements[i] = selectedElement;
+						if (selectedElement == reaction[2])
+						{
+							reaction[2] = -1;
+						}
+					}
+					else
+					{
+						inventoryElements[inventoryIndex] = selectedElement;
+					}
+				}
+			}
+
+		}
+		selectedElement = -1;
+		inventoryIndex = -1;
+	}
+
+	if (IsKeyDown(KEY_R))
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			reaction[i] = -1;
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		if (reaction[i] != -1)
+		{
+			DrawTexture(elements[reaction[i]], 392, 328 + i * 185, WHITE);
+		}
+	}
+
+	if (reaction[2] != -1 && selectedElement != reaction[2])
+	{
+		DrawTexture(elements[reaction[2]], 392, 765, WHITE);
+	}
+
+	if (selectedElement != -1)
+	{
+		if (inventoryIndex != -1)
+		{
+			DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+		}
+		else
+		{
+			DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+		}
+	}
+}
+
+void Game::drawPackageMenu()
+{
+	if (!packageClosed)
+	{
+		DrawTexture(packageMenu[0], 0, 0, WHITE);
+	}
+	else
+	{
+		DrawTexture(packageMenu[1], 0, 0, WHITE);
+		if (IsKeyPressed(KEY_R))
+		{
+			isCarryingBox = 1;
+			packaging = 0;
+		}
+	}
+
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			if (GetMouseX() >= 460 + i * 171 && GetMouseX() <= 600 + i * 171 && GetMouseY() >= 850 && GetMouseY() <= 970 && selectedElement == -1 && inventoryElements[i] != -1)
+			{
+				selectedElement = inventoryElements[i];
+				inventoryElements[i] = -1;
+				inventoryIndex = i;
+			}
+		}
+	}
+	else
+	{
+		if (selectedElement != -1)
+		{
+			if (GetMouseX() >= 895 && GetMouseX() <= 1030 && GetMouseY() >= 155 && GetMouseY() <= 290 && !packageClosed)
+			{
+				inventoryElements[inventoryIndex] = packageElement;
+				packageElement = selectedElement;
+			}
+			else
+			{
+				inventoryElements[inventoryIndex] = selectedElement;
+			}
+		}
+
+		selectedElement = -1;
+		inventoryIndex = -1;
+	}
+
+	drawInventory();
+
+	if (packageElement != -1)
+	{
+		if (IsKeyPressed(KEY_F))
+		{
+			packageClosed = !packageClosed;
+		}
+		if (!packageClosed)
+		{
+			DrawTexture(elements[packageElement], 913, 193, WHITE);
+		}
+	}
+
+	if (selectedElement != -1)
+	{
+		DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
+	}
+}
+
+void Game::drawMailbox()
+{
+	if (isCarryingBox)
+	{
+		isCarryingBox = 0;
+		mailbox = 0;
+		packageElement = -1;
+		packageClosed = 0;
+		orderElement = rand() % 22;
+	}
+	else
+	{
+		isMenuOpened = 1;
+		DrawTexture(mailboxOrderTexture, 0, 0, WHITE);
+		DrawTexture(elements[orderElement], 910, 530, WHITE);
+	}
+}
+
+void Game::drawOrderMenu()
+{
+	DrawTexture(yourOrder, 0, 0, WHITE);
+	DrawTexture(elements[orderElement], 910, 530, WHITE);
+
+	drawInventory();
+}
