@@ -491,3 +491,38 @@ void Game::drawCharacterAnimations()
 		}
 	}
 }
+
+void Game::drawMusicPlayer()
+{
+	isMenuOpened = 1;
+
+	DrawTexture(musicCovers[pauseMusic][musicIndex], 0, 0, WHITE);
+
+	if (IsKeyPressed(KEY_RIGHT))
+	{
+		StopMusicStream(music[musicIndex]);
+		if (musicIndex != 4)
+		{
+			musicIndex++;
+		}
+		else
+		{
+			musicIndex = 0;
+		}
+		PlayMusicStream(music[musicIndex]);
+	}
+	if (IsKeyPressed(KEY_LEFT))
+	{
+		StopMusicStream(music[musicIndex]);
+		if (musicIndex != 0)
+		{
+			musicIndex--;
+		}
+		else
+		{
+			musicIndex = 4;
+		}
+		PlayMusicStream(music[musicIndex]);
+	}
+	
+}
