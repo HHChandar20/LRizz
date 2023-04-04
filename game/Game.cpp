@@ -566,7 +566,28 @@ void Game::drawMusicPlayer()
 void Game::drawPeriodicTable()
 {
 	isMenuOpened = 1;
-	DrawTexture(periodicTableTexture, 0, 0, WHITE);
+
+	if (IsKeyPressed(KEY_RIGHT))
+	{
+		if (slides != 6)
+			slides++;
+	}
+	else if (IsKeyPressed(KEY_LEFT))
+	{
+		if (slides != -1)
+			slides--;
+	}
+
+	if (slides == -1)
+	{
+		DrawTexture(periodicTableTexture, 0, 0, WHITE);
+	}
+	else
+	{
+		DrawTexture(rules[slides], 0, 0, WHITE);
+	}
+
+	DrawText(TextFormat("%d/8", slides + 2), 1770, 100, 70, BLACK);
 }
 
 void Game::drawInventory()
