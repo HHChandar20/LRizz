@@ -996,6 +996,52 @@ void Game::drawStreak()
 	DrawText(TextFormat("Highest streak: %d", highestStreak), 1620, 185, 30, BLACK);
 }
 
+void Game::drawTimer()
+{
+	timer += 0.0018f;
+
+	if (timer >= 0.1f) // Make the animation slower
+	{
+		timer = 0.0f;
+
+		timerSeconds -= 1;
+		if (timerSeconds == -1)
+		{
+			timerMinutes -= 1;
+			timerSeconds = 59;
+		}
+
+		if (timerSeconds == 0 && timerMinutes == 0)
+		{
+			resetStreak();
+			resetTimer();
+		}
+	}
+	DrawRectangle(30, 90, 175, 70, BLACK);
+
+	if (timerSeconds == 0)
+	{
+		DrawText(TextFormat("0%d:%d0", timerMinutes, timerSeconds), 50, 100, 60, WHITE);
+	}
+	else if (timerSeconds < 10)
+	{
+		DrawText(TextFormat("0%d:0%d", timerMinutes, timerSeconds), 50, 100, 60, WHITE);
+	}
+	else
+	{
+		DrawText(TextFormat("0%d:%d", timerMinutes, timerSeconds), 50, 100, 60, WHITE);
+	}
+
+
+}
+
+void Game::resetTimer()
+{
+	timerMinutes = 2;
+	timerSeconds = 0;
+}
+
+
 
 void Game::loop()
 {
