@@ -7,7 +7,10 @@ Game::Game()
 		reaction[i] = -1;
 	}
 	animationTimer = 0.0f;
+	timer = 0.0f;
 	timePlayed = 0.0f;
+	timerSeconds = 0;
+	timerMinutes = 2;
 	frame = 0;
 	periodicTable = 0;
 	chemistryShelf = 0;
@@ -23,6 +26,9 @@ Game::Game()
 	isCarryingBox = 0;
 	isCarryingExtinguisher = 0;
 	mailbox = 0;
+	streak = 0;
+	highestStreak = 0;
+	slides = -1;
 
 	tracks[0] = "lo-fi";
 	tracks[1] = "superhero";
@@ -42,10 +48,11 @@ Game::Game()
 	elementPosition = -1;
 	inventoryIndex = -1;
 	packageElement = -1;
-	orderElement = rand() % 22;
+	orderElement = rand() % 16 + 6;
 	inCollision = 0;
 
 	character = { 130, 500 }; //character position (x, y)
+	fireArea = { 260, 850, 30, 370 };
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -56,7 +63,7 @@ Game::Game()
 	std::string path;
 	for (int i = 0; i < 5; i++)
 	{
-		path = tracks[i] + ".mp3";
+		path = "../assets/musicPlayer/tracks/" + tracks[i] + ".mp3";
 		music[i] = LoadMusicStream(path.c_str());
 	}
 
@@ -73,80 +80,89 @@ Game::~Game()
 
 void Game::load()
 {
-	elements[0] = LoadTexture("H2.png");
-	elements[1] = LoadTexture("Na.png");
-	elements[2] = LoadTexture("O2.png");
-	elements[3] = LoadTexture("S.png");
-	elements[4] = LoadTexture("N2.png");
-	elements[5] = LoadTexture("Cl2.png");
-	elements[6] = LoadTexture("products/H2O.png");
-	elements[7] = LoadTexture("products/HCl.png");
-	elements[8] = LoadTexture("products/H2S.png");
-	elements[9] = LoadTexture("products/SO2.png");
-	elements[10] = LoadTexture("products/SO3.png");
-	elements[11] = LoadTexture("products/H2SO3.png");
-	elements[12] = LoadTexture("products/H2SO4.png");
-	elements[13] = LoadTexture("products/NO2.png");
-	elements[14] = LoadTexture("products/NH3.png");
-	elements[15] = LoadTexture("products/HNO3.png");
-	elements[16] = LoadTexture("products/Na2S.png");
-	elements[17] = LoadTexture("products/Na2SO4.png");
-	elements[18] = LoadTexture("products/NaCl.png");
-	elements[19] = LoadTexture("products/NaH.png");
-	elements[20] = LoadTexture("products/NaOH.png");
-	elements[21] = LoadTexture("products/NH4Cl.png");
+	elements[0] = LoadTexture("../assets/elements/H2.png");
+	elements[1] = LoadTexture("../assets/elements/Na.png");
+	elements[2] = LoadTexture("../assets/elements/O2.png");
+	elements[3] = LoadTexture("../assets/elements/S.png");
+	elements[4] = LoadTexture("../assets/elements/N2.png");
+	elements[5] = LoadTexture("../assets/elements/Cl2.png");
+	elements[6] = LoadTexture("../assets/products/H2O.png");
+	elements[7] = LoadTexture("../assets/products/HCl.png");
+	elements[8] = LoadTexture("../assets/products/H2S.png");
+	elements[9] = LoadTexture("../assets/products/SO2.png");
+	elements[10] = LoadTexture("../assets/products/SO3.png");
+	elements[11] = LoadTexture("../assets/products/H2SO3.png");
+	elements[12] = LoadTexture("../assets/products/H2SO4.png");
+	elements[13] = LoadTexture("../assets/products/NO2.png");
+	elements[14] = LoadTexture("../assets/products/NH3.png");
+	elements[15] = LoadTexture("../assets/products/HNO3.png");
+	elements[16] = LoadTexture("../assets/products/Na2S.png");
+	elements[17] = LoadTexture("../assets/products/Na2SO4.png");
+	elements[18] = LoadTexture("../assets/products/NaCl.png");
+	elements[19] = LoadTexture("../assets/products/NaH.png");
+	elements[20] = LoadTexture("../assets/products/NaOH.png");
+	elements[21] = LoadTexture("../assets/products/NH4Cl.png");
 
 	for (int i = 0; i < 7; i++)
 	{
-		onFireTextures[i] = LoadTexture(TextFormat("onFire%d.png", i));
+		onFireTextures[i] = LoadTexture(TextFormat("../assets/onFire/onFire%d.png", i + 1));
+		fireExtinguisher[i] = LoadTexture(TextFormat("../assets/characterAnimations/fireExtinguish%d.png", i + 1));
 	}
+
+	fireExtinguisher[7] = LoadTexture("../assets/characterAnimations/fireExtinguish1.png");
+	onFireTextures[7] = LoadTexture("../assets/onFire/onFire7.png");
 
 	for (int i = 0; i < 4; i++)
 	{
-		idle[i] = LoadTexture(TextFormat("idle1.png"));
-		idleBox[i] = LoadTexture(TextFormat("idleBox1.png"));
-		interact[i] = LoadTexture(TextFormat("interact1.png"));
+		idle[i] = LoadTexture(TextFormat("../assets/characterAnimations/idle1.png"));
+		idleBox[i] = LoadTexture(TextFormat("../assets/characterAnimations/idleBox1.png"));
+		interact[i] = LoadTexture(TextFormat("../assets/characterAnimations/interact1.png"));
 	}
 
 	for (int i = 4; i < 8; i++)
 	{
-		idle[i] = LoadTexture(TextFormat("idle2.png"));
-		idleBox[i] = LoadTexture(TextFormat("idleBox2.png"));
-		interact[i] = LoadTexture(TextFormat("interact2.png"));
+		idle[i] = LoadTexture(TextFormat("../assets/characterAnimations/idle2.png"));
+		idleBox[i] = LoadTexture(TextFormat("../assets/characterAnimations/idleBox2.png"));
+		interact[i] = LoadTexture(TextFormat("../assets/characterAnimations/interact2.png"));
 	}
 
 	for (int i = 0; i < 8; i++)
 	{
-		moveUpRight[i] = LoadTexture(TextFormat("upRight%d.png", i + 1));
-		moveUpLeft[i] = LoadTexture(TextFormat("upLeft%d.png", i + 1));
-		moveDownRight[i] = LoadTexture(TextFormat("downRight%d.png", i + 1));
-		moveDownLeft[i] = LoadTexture(TextFormat("downLeft%d.png", i + 1));
-		moveUp[i] = LoadTexture(TextFormat("up%d.png", i + 1));
-		moveDown[i] = LoadTexture(TextFormat("down%d.png", i + 1));
-		moveRight[i] = LoadTexture(TextFormat("right%d.png", i + 1));
-		moveLeft[i] = LoadTexture(TextFormat("left%d.png", i + 1));
+		moveUpRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/upRight%d.png", i + 1));
+		moveUpLeft[i] = LoadTexture(TextFormat("../assets/characterAnimations/upLeft%d.png", i + 1));
+		moveDownRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/downRight%d.png", i + 1));
+		moveDownLeft[i] = LoadTexture(TextFormat("../assets/characterAnimations/downLeft%d.png", i + 1));
+		moveUp[i] = LoadTexture(TextFormat("../assets/characterAnimations/up%d.png", i + 1));
+		moveDown[i] = LoadTexture(TextFormat("../assets/characterAnimations/down%d.png", i + 1));
+		moveRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/right%d.png", i + 1));
+		moveLeft[i] = LoadTexture(TextFormat("../assets/characterAnimations/left%d.png", i + 1));
 	}
 
-	react[0] = LoadTexture("react1.png");
-	react[1] = LoadTexture("react2.png");
+	for (int i = 0; i < 7; i++)
+	{
+		rules[i] = LoadTexture(TextFormat("../assets/rules/rules%d.png", i + 1));
+	}
 
-	inventory = LoadTexture("inventory.png");
-	yourOrder = LoadTexture("yourOrder.png");
-	chemistryShelfTexture = LoadTexture("chemistry-shelf.png");
-	background = LoadTexture("background.png");
-	walls = LoadTexture("walls.png");
-	periodicTableTexture = LoadTexture("periodic-table.png");
-	repeat = LoadTexture("repeat.png");
-	mailboxOrderTexture = LoadTexture("mailboxOrderMenu.png");
+	react[0] = LoadTexture("../assets/reactor/react1.png");
+	react[1] = LoadTexture("../assets/reactor/react2.png");
 
-	packageMenu[0] = LoadTexture("package.png");
-	packageMenu[1] = LoadTexture("packageClosed.png");
+	inventory = LoadTexture("../assets/chemistryShelf/inventory.png");
+	yourOrder = LoadTexture("../assets/orderMenu/yourOrder.png");
+	chemistryShelfTexture = LoadTexture("../assets/chemistryShelf/chemistry-shelf.png");
+	background = LoadTexture("../assets/background.png");
+	walls = LoadTexture("../assets/walls.png");
+	periodicTableTexture = LoadTexture("../assets/periodic-table.png");
+	repeat = LoadTexture("../assets/musicPlayer/repeat.png");
+	mailboxOrderTexture = LoadTexture("../assets/orderMenu/mailboxOrderMenu.png");
+
+	packageMenu[0] = LoadTexture("../assets/packageMenu/package.png");
+	packageMenu[1] = LoadTexture("../assets/packageMenu/packageClosed.png");
 
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			std::string path = tracks[j];
+			std::string path = "../assets/musicPlayer/" + tracks[j];
 
 			if (i == 0)
 			{
@@ -422,11 +438,15 @@ void Game::drawCharacterAnimations()
 	else if (isCarryingExtinguisher && IsKeyDown(KEY_E))
 	{
 		DrawTexture(fireExtinguisher[frame], character.x, character.y, WHITE);
-		extinguishTime += GetFrameTime();
-		if (extinguishTime >= 5.0f)
+
+		if (CheckCollisionPointRec(character, fireArea))
+			extinguishTime += GetFrameTime();
+
+		if (extinguishTime >= 4.0f)
 		{
 			isCarryingExtinguisher = 0;
 			onFire = 0;
+			extinguishTime = 0.0f;
 		}
 	}
 	else
@@ -588,6 +608,7 @@ void Game::drawPeriodicTable()
 	}
 
 	DrawText(TextFormat("%d/8", slides + 2), 1770, 100, 70, BLACK);
+
 }
 
 void Game::drawInventory()
@@ -775,6 +796,12 @@ void Game::drawReactor()
 		{
 			reaction[2] = 18; //NaCl
 		}
+		else if (reaction[0] != -1 || reaction[1] != -1)
+		{
+			reactor = 0;
+			onFire = 1;
+			if (onFire) isCarryingExtinguisher = 1;
+		}
 
 		reaction[0] = -1;
 		reaction[1] = -1;
@@ -954,11 +981,23 @@ void Game::drawMailbox()
 {
 	if (isCarryingBox)
 	{
+		if (packageElement == orderElement)
+		{
+			streak++;
+			if (streak > highestStreak)
+				highestStreak = streak;
+
+			orderElement = rand() % 16 + 6;
+		}
+		else
+		{
+			resetStreak();
+		}
 		isCarryingBox = 0;
 		mailbox = 0;
 		packageElement = -1;
 		packageClosed = 0;
-		orderElement = rand() % 22;
+		resetTimer();
 	}
 	else
 	{
