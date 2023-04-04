@@ -23,6 +23,10 @@ public:
     void drawOrderMenu();
     void drawMailbox();
     void drawOnFireAnimation();
+    void drawStreak();
+    void resetStreak();
+    void drawTimer();
+    void resetTimer();
     void load();
     void unload();
 
@@ -34,9 +38,11 @@ private:
     bool packaging, packageClosed, isCarryingBox, isCarryingExtinguisher;
     bool onFire;
     bool inventoryElementTypes[6];
-    bool inCollision = 0;
-    float animationTimer, timePlayed;
+    bool inCollision;
+    float animationTimer, timePlayed, timer;
     float extinguishTime;
+    int slides;
+    int timerSeconds, timerMinutes;
     int frame;
     int reaction[3];
     int mouseX, mouseY;
@@ -44,12 +50,13 @@ private:
     int inventoryElements[6], inventoryIndex;
     int packageElement, orderElement;
     int musicIndex, randomMusic;
+    int streak, highestStreak;
 
     Vector2 character;
     Color fire[7];
     Music music[5];
 
-    Texture2D onFireTextures[7];
+    Texture2D onFireTextures[8];
     Texture2D elements[22];
     Texture2D idle[8];
     Texture2D idleBox[8];
@@ -67,6 +74,7 @@ private:
     Texture2D inventory;
     Texture2D yourOrder;
     Texture2D chemistryShelfTexture;
+    Texture2D rules[7];
     Texture2D background;
     Texture2D walls;
     Texture2D periodicTableTexture;
@@ -76,6 +84,7 @@ private:
     Texture2D musicCovers[2][5];
     Texture2D mailboxOrderTexture;
 
+    Rectangle fireArea;
     Rectangle collisions[8][35] =
     {
         //W+A
@@ -238,7 +247,7 @@ private:
         //D
         {
             1760, -100, 200, 1200,
-            740, 580, 485, 80,
+            740, 580, 485, 70,
             140, 340, 300, 100,
             375, 200, 50, 220,
             300, -100, 140, 350,
