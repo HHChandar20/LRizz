@@ -2,6 +2,8 @@
 
 Game::Game()
 {
+	//Initialize variables with default values
+
 	for (int i = 0; i < 3; i++)
 	{
 		reaction[i] = -1;
@@ -48,19 +50,20 @@ Game::Game()
 	elementPosition = -1;
 	inventoryIndex = -1;
 	packageElement = -1;
-	orderElement = rand() % 16 + 6;
+	orderElement = rand() % 16 + 6; //Pick a random element from 6 - 22
 	inCollision = 0;
 
 	character = { 130, 500 }; //character position (x, y)
-	fireArea = { 260, 850, 30, 370 };
-
+	fireArea = { 260, 850, 30, 370 }; //Coordinates for the fire extinguishing area
+	
+	//Initialize filter colors for on-fire
 	for (int i = 0; i < 7; i++)
 	{
 		fire[i] = RED;
 		if (i < 4)
 			fire[i] = MAROON;
 	}
-	std::string path;
+	std::string path; // File path of the tracks
 	for (int i = 0; i < 5; i++)
 	{
 		path = "../assets/musicPlayer/tracks/" + tracks[i] + ".mp3";
@@ -70,7 +73,7 @@ Game::Game()
 	extinguishTime = 0.0f;
 
 	load();
-	PlayMusicStream(music[musicIndex]);
+	PlayMusicStream(music[musicIndex]); // Play Music
 }
 
 Game::~Game()
@@ -80,6 +83,7 @@ Game::~Game()
 
 void Game::load()
 {
+	//Load elements textures
 	elements[0] = LoadTexture("../assets/elements/H2.png");
 	elements[1] = LoadTexture("../assets/elements/Na.png");
 	elements[2] = LoadTexture("../assets/elements/O2.png");
@@ -103,6 +107,7 @@ void Game::load()
 	elements[20] = LoadTexture("../assets/products/NaOH.png");
 	elements[21] = LoadTexture("../assets/products/NH4Cl.png");
 
+	//Load onFire effect textures
 	for (int i = 0; i < 7; i++)
 	{
 		onFireTextures[i] = LoadTexture(TextFormat("../assets/onFire/onFire%d.png", i + 1));
@@ -126,6 +131,7 @@ void Game::load()
 		interact[i] = LoadTexture(TextFormat("../assets/characterAnimations/interact2.png"));
 	}
 
+	//Load character moving animation textures
 	for (int i = 0; i < 8; i++)
 	{
 		moveUpRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/upRight%d.png", i + 1));
@@ -180,6 +186,8 @@ void Game::load()
 
 void Game::unload()
 {
+
+	//Unload all textures
 	for (int i = 0; i < 22; i++)
 	{
 		UnloadTexture(elements[i]);
@@ -380,6 +388,7 @@ void Game::drawBackground()
 	}
 }
 
+//Draw background parts which should be over the character
 void Game::drawWalls()
 {
 	if (!onFire)
@@ -520,18 +529,22 @@ void Game::isMusicPaused()
 
 void Game::drawMusicPlayer()
 {
-	isMenuOpened = 1;
+	isMenuOpened = 1; // Disable character moving while a menu is opened
 
 	DrawTexture(musicCovers[pauseMusic][musicIndex], 0, 0, WHITE);
 
+	//Get the time the track has been playing 
 	timePlayed = GetMusicTimePlayed(music[musicIndex]) / GetMusicTimeLength(music[musicIndex]);
 
+	//Pause music
 	if (IsKeyPressed(KEY_P))
 	{
 		pauseMusic = !pauseMusic;
 	}
 	if (IsKeyPressed(KEY_RIGHT) || (timePlayed >= 0.999f && !repeatMusic))
 	{
+		//Next track
+
 		StopMusicStream(music[musicIndex]);
 		if (musicIndex != 4)
 		{
@@ -546,6 +559,8 @@ void Game::drawMusicPlayer()
 	}
 	if (IsKeyPressed(KEY_LEFT))
 	{
+		//Previous track
+
 		StopMusicStream(music[musicIndex]);
 		if (musicIndex != 0)
 		{
@@ -560,10 +575,11 @@ void Game::drawMusicPlayer()
 	}
 	if (IsKeyPressed(KEY_R))
 	{
-		repeatMusic = !repeatMusic;
+		repeatMusic = !repeatMusic; // Enable/disable music repeat functionality
 	}
 	if (IsKeyPressed(KEY_Q))
 	{
+		// Choose a random track
 		StopMusicStream(music[musicIndex]);
 		randomMusic = rand() % 5;
 
@@ -587,12 +603,12 @@ void Game::drawPeriodicTable()
 {
 	isMenuOpened = 1;
 
-	if (IsKeyPressed(KEY_RIGHT))
+	if (IsKeyPressed(KEY_RIGHT)) // Next slide
 	{
 		if (slides != 6)
 			slides++;
 	}
-	else if (IsKeyPressed(KEY_LEFT))
+	else if (IsKeyPressed(KEY_LEFT)) // Previous slide
 	{
 		if (slides != -1)
 			slides--;
@@ -615,6 +631,7 @@ void Game::drawInventory()
 {
 	DrawTexture(inventory, 0, 0, WHITE);
 
+	// Display inventory elements
 	for (int i = 0; i < 6; i++)
 	{
 		if (inventoryElements[i] != -1)
@@ -629,6 +646,7 @@ void Game::drawChemistryShelf()
 	isMenuOpened = 1;
 	DrawTexture(chemistryShelfTexture, 0, 0, WHITE);
 
+	// Drag and drop elements
 	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
 	{
 		for (int i = 0; i < 6; i++)
@@ -643,6 +661,7 @@ void Game::drawChemistryShelf()
 	{
 		isMenuOpened = 1;
 
+		// Place selected element
 		if (selectedElement != -1)
 		{
 			for (int i = 0; i < 6; i++)
@@ -667,6 +686,7 @@ void Game::drawChemistryShelf()
 
 	drawInventory();
 
+	// Draw the selected element
 	if (selectedElement != -1)
 	{
 		DrawTexture(elements[selectedElement], GetMouseX() - 70, GetMouseY() - 20, WHITE);
@@ -684,6 +704,7 @@ void Game::drawReactor()
 	}
 	else if (((IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && GetMouseX() >= 770 && GetMouseX() <= 1000 && GetMouseY() >= 760 && GetMouseY() <= 870) || IsKeyReleased(KEY_SPACE)) && selectedElement == -1)
 	{
+		// Reactions
 		if ((reaction[0] == 0 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 0))
 		{
 			reaction[2] = 19; //NaH
@@ -799,8 +820,8 @@ void Game::drawReactor()
 		else if (reaction[0] != -1 || reaction[1] != -1)
 		{
 			reactor = 0;
-			onFire = 1;
-			if (onFire) isCarryingExtinguisher = 1;
+			onFire = 1; // Start a fire
+			if (onFire) isCarryingExtinguisher = 1; // Pick up the fire extinguisher
 		}
 
 		reaction[0] = -1;
@@ -876,6 +897,7 @@ void Game::drawReactor()
 		inventoryIndex = -1;
 	}
 
+	// Reset reactor elements
 	if (IsKeyDown(KEY_R))
 	{
 		for (int i = 0; i < 3; i++)
@@ -884,6 +906,7 @@ void Game::drawReactor()
 		}
 	}
 
+	//Draw reactor elements
 	for (int i = 0; i < 2; i++)
 	{
 		if (reaction[i] != -1)
@@ -912,13 +935,17 @@ void Game::drawReactor()
 
 void Game::drawPackageMenu()
 {
-	if (!packageClosed)
+	isMenuOpened = 1;
+
+	if (!packageClosed) // Check if the package is ready for delivery
 	{
 		DrawTexture(packageMenu[0], 0, 0, WHITE);
 	}
 	else
 	{
 		DrawTexture(packageMenu[1], 0, 0, WHITE);
+
+		// Pick up the package
 		if (IsKeyPressed(KEY_R))
 		{
 			isCarryingBox = 1;
@@ -961,6 +988,7 @@ void Game::drawPackageMenu()
 
 	if (packageElement != -1)
 	{
+		// Close the package
 		if (IsKeyPressed(KEY_F))
 		{
 			packageClosed = !packageClosed;
@@ -984,6 +1012,8 @@ void Game::drawMailbox()
 		if (packageElement == orderElement)
 		{
 			streak++;
+
+			// Set highest streak
 			if (streak > highestStreak)
 				highestStreak = streak;
 
@@ -1037,9 +1067,9 @@ void Game::drawStreak()
 
 void Game::drawTimer()
 {
-	timer += 0.0018f;
+	timer += 0.0018f; // Set timer increasing value
 
-	if (timer >= 0.1f) // Make the animation slower
+	if (timer >= 0.1f) // Make the timer slower
 	{
 		timer = 0.0f;
 
@@ -1080,6 +1110,7 @@ void Game::resetTimer()
 	timerSeconds = 0;
 }
 
+//Draw game loop
 void Game::loop()
 {
 	UpdateMusicStream(music[musicIndex]);
@@ -1125,7 +1156,7 @@ void Game::loop()
 		drawMailbox();
 	}
 
-	if (IsKeyDown(KEY_TAB) && !isMenuOpened)
+	if (IsKeyDown(KEY_TAB) && !isMenuOpened) // Display inventory
 	{
 		drawOrderMenu();
 		drawStreak();

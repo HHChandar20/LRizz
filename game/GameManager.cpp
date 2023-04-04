@@ -8,7 +8,7 @@ GameManager::GameManager()
     InitWindow(1920, 1080, "Chemistry Game");
     SetTargetFPS(60);
     ToggleFullscreen();
-    InitAudioDevice();
+    InitAudioDevice(); //Initialize audio device
 }
 
 GameManager::~GameManager()
@@ -23,9 +23,7 @@ void GameManager::drawMainLoop()
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        game->loop();
-
+        game->loop(); // Start game loop
         EndDrawing();
     }
-
 }
