@@ -960,6 +960,22 @@ void Game::drawOnFireAnimation()
 	DrawTexture(onFireTextures[frame], 0, 0, fire[frame]);
 }
 
+void Game::resetStreak()
+{
+	streak = 0;
+	orderElement = rand() % 16 + 6;
+}
+
+void Game::drawStreak()
+{
+	DrawRectangle(1700, 90, 210, 60, BEIGE);
+	DrawText(TextFormat("Streak: %d", streak), 1710, 100, 40, BLACK);
+
+	DrawRectangle(1600, 170, 310, 60, BEIGE);
+	DrawText(TextFormat("Highest streak: %d", highestStreak), 1620, 185, 30, BLACK);
+}
+
+
 void Game::loop()
 {
 	UpdateMusicStream(music[musicIndex]);
