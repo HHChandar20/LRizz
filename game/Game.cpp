@@ -1041,8 +1041,6 @@ void Game::resetTimer()
 	timerSeconds = 0;
 }
 
-
-
 void Game::loop()
 {
 	UpdateMusicStream(music[musicIndex]);
@@ -1088,14 +1086,11 @@ void Game::loop()
 		drawMailbox();
 	}
 
-	if (IsKeyPressed(KEY_Z))
-	{
-		isCarryingExtinguisher = 1;
-		onFire = 1;
-	}
-
 	if (IsKeyDown(KEY_TAB) && !isMenuOpened)
 	{
 		drawOrderMenu();
+		drawStreak();
 	}
+
+	drawTimer();
 }
