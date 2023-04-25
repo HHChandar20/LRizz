@@ -7,8 +7,8 @@ GameManager::GameManager()
     // Initialize window and settings
     InitWindow(1920, 1080, "Chemistry Game");
     SetTargetFPS(60);
-    ToggleFullscreen();
-    InitAudioDevice(); //Initialize audio device
+
+    InitAudioDevice();
 }
 
 GameManager::~GameManager()
@@ -26,4 +26,11 @@ void GameManager::drawMainLoop()
         game->loop(); // Start game loop
         EndDrawing();
     }
+
+    game->highscore.open("highscore.txt", std::ios::out);
+    game->highscore << std::to_string(game->highestStreak);
+
+    game->highscore.close();
+
+    delete game;
 }

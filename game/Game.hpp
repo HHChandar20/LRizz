@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "raylib.h"
 
 class Game
@@ -8,10 +10,14 @@ public:
     ~Game();
     Game();
 
+    int highestStreak;
+    std::fstream highscore;
+
     void loop();
     void moveCharacter();
     void drawBackground();
     void drawCharacterAnimations();
+    //void drawCharacter2Animations();
     void drawWalls();
     void drawInventory();
     void isMusicPaused();
@@ -50,11 +56,16 @@ private:
     int inventoryElements[6], inventoryIndex;
     int packageElement, orderElement;
     int musicIndex, randomMusic;
-    int streak, highestStreak;
+    int streak;
+    
+    std::string data;
 
-    Vector2 character;
+    Vector2 character; //character2;
     Color fire[7];
+
     Music music[5];
+
+    Sound elementSound, emergencySound, glassSound, liquidSound, packagingSound, submitSound, reactorSound;
 
     Texture2D onFireTextures[8];
     Texture2D elements[22];

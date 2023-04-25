@@ -8,5 +8,4 @@ public:
     ~GameManager();
     void drawMainLoop();
     GameManager();
-
 };

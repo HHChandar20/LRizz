@@ -32,6 +32,17 @@ Game::Game()
 	highestStreak = 0;
 	slides = -1;
 
+	if (FileExists("highscore.txt"))
+	{
+		highscore.open("highscore.txt", std::ios::in);
+		getline(highscore, data);
+		if (data != "")
+		{
+			highestStreak = stoi(data);
+		}
+		highscore.close();
+	}
+
 	tracks[0] = "lo-fi";
 	tracks[1] = "superhero";
 	tracks[2] = "phonk";
@@ -54,6 +65,7 @@ Game::Game()
 	inCollision = 0;
 
 	character = { 130, 500 }; //character position (x, y)
+	//character2 = { 400, 500 }; //character 2 position (x, y)
 	fireArea = { 260, 850, 30, 370 }; //Coordinates for the fire extinguishing area
 	
 	//Initialize filter colors for on-fire
@@ -66,7 +78,7 @@ Game::Game()
 	std::string path; // File path of the tracks
 	for (int i = 0; i < 5; i++)
 	{
-		path = "../assets/musicPlayer/tracks/" + tracks[i] + ".mp3";
+		path = "assets/musicPlayer/tracks/" + tracks[i] + ".mp3";
 		music[i] = LoadMusicStream(path.c_str());
 	}
 
@@ -84,91 +96,91 @@ Game::~Game()
 void Game::load()
 {
 	//Load elements textures
-	elements[0] = LoadTexture("../assets/elements/H2.png");
-	elements[1] = LoadTexture("../assets/elements/Na.png");
-	elements[2] = LoadTexture("../assets/elements/O2.png");
-	elements[3] = LoadTexture("../assets/elements/S.png");
-	elements[4] = LoadTexture("../assets/elements/N2.png");
-	elements[5] = LoadTexture("../assets/elements/Cl2.png");
-	elements[6] = LoadTexture("../assets/products/H2O.png");
-	elements[7] = LoadTexture("../assets/products/HCl.png");
-	elements[8] = LoadTexture("../assets/products/H2S.png");
-	elements[9] = LoadTexture("../assets/products/SO2.png");
-	elements[10] = LoadTexture("../assets/products/SO3.png");
-	elements[11] = LoadTexture("../assets/products/H2SO3.png");
-	elements[12] = LoadTexture("../assets/products/H2SO4.png");
-	elements[13] = LoadTexture("../assets/products/NO2.png");
-	elements[14] = LoadTexture("../assets/products/NH3.png");
-	elements[15] = LoadTexture("../assets/products/HNO3.png");
-	elements[16] = LoadTexture("../assets/products/Na2S.png");
-	elements[17] = LoadTexture("../assets/products/Na2SO4.png");
-	elements[18] = LoadTexture("../assets/products/NaCl.png");
-	elements[19] = LoadTexture("../assets/products/NaH.png");
-	elements[20] = LoadTexture("../assets/products/NaOH.png");
-	elements[21] = LoadTexture("../assets/products/NH4Cl.png");
+	elements[0] = LoadTexture("assets/elements/H2.png");
+	elements[1] = LoadTexture("assets/elements/Na.png");
+	elements[2] = LoadTexture("assets/elements/O2.png");
+	elements[3] = LoadTexture("assets/elements/S.png");
+	elements[4] = LoadTexture("assets/elements/N2.png");
+	elements[5] = LoadTexture("assets/elements/Cl2.png");
+	elements[6] = LoadTexture("assets/products/H2O.png");
+	elements[7] = LoadTexture("assets/products/HCl.png");
+	elements[8] = LoadTexture("assets/products/H2S.png");
+	elements[9] = LoadTexture("assets/products/SO2.png");
+	elements[10] = LoadTexture("assets/products/SO3.png");
+	elements[11] = LoadTexture("assets/products/H2SO3.png");
+	elements[12] = LoadTexture("assets/products/H2SO4.png");
+	elements[13] = LoadTexture("assets/products/NO2.png");
+	elements[14] = LoadTexture("assets/products/NH3.png");
+	elements[15] = LoadTexture("assets/products/HNO3.png");
+	elements[16] = LoadTexture("assets/products/Na2S.png");
+	elements[17] = LoadTexture("assets/products/Na2SO4.png");
+	elements[18] = LoadTexture("assets/products/NaCl.png");
+	elements[19] = LoadTexture("assets/products/NaH.png");
+	elements[20] = LoadTexture("assets/products/NaOH.png");
+	elements[21] = LoadTexture("assets/products/NH4Cl.png");
 
 	//Load onFire effect textures
 	for (int i = 0; i < 7; i++)
 	{
-		onFireTextures[i] = LoadTexture(TextFormat("../assets/onFire/onFire%d.png", i + 1));
-		fireExtinguisher[i] = LoadTexture(TextFormat("../assets/characterAnimations/fireExtinguish%d.png", i + 1));
+		onFireTextures[i] = LoadTexture(TextFormat("assets/onFire/onFire%d.png", i + 1));
+		fireExtinguisher[i] = LoadTexture(TextFormat("assets/characterAnimations/fireExtinguish%d.png", i + 1));
 	}
 
-	fireExtinguisher[7] = LoadTexture("../assets/characterAnimations/fireExtinguish1.png");
-	onFireTextures[7] = LoadTexture("../assets/onFire/onFire7.png");
+	fireExtinguisher[7] = LoadTexture("assets/characterAnimations/fireExtinguish1.png");
+	onFireTextures[7] = LoadTexture("assets/onFire/onFire7.png");
 
 	for (int i = 0; i < 4; i++)
 	{
-		idle[i] = LoadTexture(TextFormat("../assets/characterAnimations/idle1.png"));
-		idleBox[i] = LoadTexture(TextFormat("../assets/characterAnimations/idleBox1.png"));
-		interact[i] = LoadTexture(TextFormat("../assets/characterAnimations/interact1.png"));
+		idle[i] = LoadTexture(TextFormat("assets/characterAnimations/idle1.png"));
+		idleBox[i] = LoadTexture(TextFormat("assets/characterAnimations/idleBox1.png"));
+		interact[i] = LoadTexture(TextFormat("assets/characterAnimations/interact1.png"));
 	}
 
 	for (int i = 4; i < 8; i++)
 	{
-		idle[i] = LoadTexture(TextFormat("../assets/characterAnimations/idle2.png"));
-		idleBox[i] = LoadTexture(TextFormat("../assets/characterAnimations/idleBox2.png"));
-		interact[i] = LoadTexture(TextFormat("../assets/characterAnimations/interact2.png"));
+		idle[i] = LoadTexture(TextFormat("assets/characterAnimations/idle2.png"));
+		idleBox[i] = LoadTexture(TextFormat("assets/characterAnimations/idleBox2.png"));
+		interact[i] = LoadTexture(TextFormat("assets/characterAnimations/interact2.png"));
 	}
 
 	//Load character moving animation textures
 	for (int i = 0; i < 8; i++)
 	{
-		moveUpRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/upRight%d.png", i + 1));
-		moveUpLeft[i] = LoadTexture(TextFormat("../assets/characterAnimations/upLeft%d.png", i + 1));
-		moveDownRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/downRight%d.png", i + 1));
-		moveDownLeft[i] = LoadTexture(TextFormat("../assets/characterAnimations/downLeft%d.png", i + 1));
-		moveUp[i] = LoadTexture(TextFormat("../assets/characterAnimations/up%d.png", i + 1));
-		moveDown[i] = LoadTexture(TextFormat("../assets/characterAnimations/down%d.png", i + 1));
-		moveRight[i] = LoadTexture(TextFormat("../assets/characterAnimations/right%d.png", i + 1));
-		moveLeft[i] = LoadTexture(TextFormat("../assets/characterAnimations/left%d.png", i + 1));
+		moveUpRight[i] = LoadTexture(TextFormat("assets/characterAnimations/upRight%d.png", i + 1));
+		moveUpLeft[i] = LoadTexture(TextFormat("assets/characterAnimations/upLeft%d.png", i + 1));
+		moveDownRight[i] = LoadTexture(TextFormat("assets/characterAnimations/downRight%d.png", i + 1));
+		moveDownLeft[i] = LoadTexture(TextFormat("assets/characterAnimations/downLeft%d.png", i + 1));
+		moveUp[i] = LoadTexture(TextFormat("assets/characterAnimations/up%d.png", i + 1));
+		moveDown[i] = LoadTexture(TextFormat("assets/characterAnimations/down%d.png", i + 1));
+		moveRight[i] = LoadTexture(TextFormat("assets/characterAnimations/right%d.png", i + 1));
+		moveLeft[i] = LoadTexture(TextFormat("assets/characterAnimations/left%d.png", i + 1));
 	}
 
 	for (int i = 0; i < 7; i++)
 	{
-		rules[i] = LoadTexture(TextFormat("../assets/rules/rules%d.png", i + 1));
+		rules[i] = LoadTexture(TextFormat("assets/rules/rules%d.png", i + 1));
 	}
 
-	react[0] = LoadTexture("../assets/reactor/react1.png");
-	react[1] = LoadTexture("../assets/reactor/react2.png");
+	react[0] = LoadTexture("assets/reactor/react1.png");
+	react[1] = LoadTexture("assets/reactor/react2.png");
 
-	inventory = LoadTexture("../assets/chemistryShelf/inventory.png");
-	yourOrder = LoadTexture("../assets/orderMenu/yourOrder.png");
-	chemistryShelfTexture = LoadTexture("../assets/chemistryShelf/chemistry-shelf.png");
-	background = LoadTexture("../assets/background.png");
-	walls = LoadTexture("../assets/walls.png");
-	periodicTableTexture = LoadTexture("../assets/periodic-table.png");
-	repeat = LoadTexture("../assets/musicPlayer/repeat.png");
-	mailboxOrderTexture = LoadTexture("../assets/orderMenu/mailboxOrderMenu.png");
+	inventory = LoadTexture("assets/chemistryShelf/inventory.png");
+	yourOrder = LoadTexture("assets/orderMenu/yourOrder.png");
+	chemistryShelfTexture = LoadTexture("assets/chemistryShelf/chemistry-shelf.png");
+	background = LoadTexture("assets/background.png");
+	walls = LoadTexture("assets/walls.png");
+	periodicTableTexture = LoadTexture("assets/periodic-table.png");
+	repeat = LoadTexture("assets/musicPlayer/repeat.png");
+	mailboxOrderTexture = LoadTexture("assets/orderMenu/mailboxOrderMenu.png");
 
-	packageMenu[0] = LoadTexture("../assets/packageMenu/package.png");
-	packageMenu[1] = LoadTexture("../assets/packageMenu/packageClosed.png");
+	packageMenu[0] = LoadTexture("assets/packageMenu/package.png");
+	packageMenu[1] = LoadTexture("assets/packageMenu/packageClosed.png");
 
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			std::string path = "../assets/musicPlayer/" + tracks[j];
+			std::string path = "assets/musicPlayer/" + tracks[j];
 
 			if (i == 0)
 			{
@@ -182,6 +194,14 @@ void Game::load()
 			musicCovers[i][j] = LoadTexture(path.c_str());
 		}
 	}
+
+	elementSound = LoadSound("assets/sounds/element.mp3");
+	emergencySound = LoadSound("assets/sounds/emergency.mp3");
+	glassSound = LoadSound("assets/sounds/glass.mp3");
+	liquidSound = LoadSound("assets/sounds/liquid.mp3");
+	submitSound = LoadSound("assets/sounds/submit.mp3");
+	packagingSound = LoadSound("assets/sounds/packaging.mp3");
+	reactorSound = LoadSound("assets/sounds/reactor.mp3");
 }
 
 void Game::unload()
@@ -240,6 +260,14 @@ void Game::unload()
 			UnloadTexture(musicCovers[i][j]);
 		}
 	}
+
+	UnloadSound(elementSound);
+	UnloadSound(emergencySound);
+	UnloadSound(glassSound);
+	UnloadSound(liquidSound);
+	UnloadSound(submitSound);
+	UnloadSound(packagingSound);
+	UnloadSound(reactorSound);
 }
 
 void Game::moveCharacter()
@@ -375,17 +403,135 @@ void Game::moveCharacter()
 				character.y -= 20;
 			}
 		}
+
+
+		/*if (IsKeyDown(KEY_UP) && IsKeyDown(KEY_LEFT) && IsKeyUp(KEY_DOWN) && IsKeyUp(KEY_RIGHT) && !isMenuOpened)
+		{
+			for (int i = 0; i < 35; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[0][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.x -= 15;
+				character2.y -= 15;
+			}
+		}
+		else if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_LEFT) && IsKeyUp(KEY_UP) && IsKeyUp(KEY_RIGHT) && !isMenuOpened)
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[1][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.x -= 15;
+				character2.y += 15;
+			}
+		}
+		else if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT) && IsKeyUp(KEY_UP) && IsKeyUp(KEY_LEFT) && !isMenuOpened)
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[2][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.x += 15;
+				character2.y += 15;
+			}
+		}
+		else if (IsKeyDown(KEY_UP) && IsKeyDown(KEY_RIGHT) && IsKeyUp(KEY_LEFT) && IsKeyUp(KEY_DOWN) && !isMenuOpened)
+		{
+			for (int i = 0; i < 35; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[3][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.x += 15;
+				character2.y -= 15;
+			}
+		}
+		else if (IsKeyDown(KEY_DOWN) && IsKeyUp(KEY_RIGHT) && IsKeyUp(KEY_LEFT) && IsKeyUp(KEY_UP) && !isMenuOpened)
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[4][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.y += 20;
+			}
+		}
+		else if (IsKeyDown(KEY_LEFT) && IsKeyUp(KEY_DOWN) && IsKeyUp(KEY_RIGHT) && IsKeyUp(KEY_UP) && !isMenuOpened)
+		{
+			for (int i = 0; i < 26; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[5][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.x -= 20;
+			}
+		}
+		else if (IsKeyDown(KEY_RIGHT) && IsKeyUp(KEY_DOWN) && IsKeyUp(KEY_LEFT) && IsKeyUp(KEY_UP) && !isMenuOpened)
+		{
+			for (int i = 0; i < 25; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[6][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.x += 20;
+			}
+		}
+		else if (IsKeyDown(KEY_UP) && IsKeyUp(KEY_DOWN) && IsKeyUp(KEY_LEFT) && IsKeyUp(KEY_RIGHT) && !isMenuOpened)
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				if (CheckCollisionPointRec(character2, collisions[7][i]))
+				{
+					inCollision = 1;
+				}
+			}
+			if (!inCollision)
+			{
+				character2.y -= 20;
+			}
+		}
+		*/
+		
 		inCollision = 0;
+	
 	}
 }
 
 void Game::drawBackground()
 {
-	if (!onFire)
-	{
-		ClearBackground(WHITE);
-		DrawTexture(background, 0, 0, WHITE);
-	}
+	ClearBackground(WHITE);
+	DrawTexture(background, 0, 0, WHITE);
 }
 
 //Draw background parts which should be over the character
@@ -456,6 +602,8 @@ void Game::drawCharacterAnimations()
 			isCarryingExtinguisher = 0;
 			onFire = 0;
 			extinguishTime = 0.0f;
+			pauseMusic = 0;
+			StopSound(emergencySound);
 		}
 	}
 	else
@@ -521,6 +669,132 @@ void Game::drawCharacterAnimations()
 	}
 }
 
+/*void Game::drawCharacter2Animations()
+{
+	if (IsKeyDown(KEY_UP) && IsKeyDown(KEY_RIGHT))
+	{
+		DrawTexture(moveUpRight[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_UP) && IsKeyDown(KEY_LEFT))
+	{
+		DrawTexture(moveUpLeft[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT))
+	{
+		DrawTexture(moveDownRight[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_LEFT))
+	{
+		DrawTexture(moveDownLeft[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_RIGHT))
+	{
+		DrawTexture(moveRight[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_LEFT))
+	{
+		DrawTexture(moveLeft[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_UP))
+	{
+		DrawTexture(moveUp[frame], character2.x, character2.y, RED);
+	}
+	else if (IsKeyDown(KEY_DOWN))
+	{
+		DrawTexture(moveDown[frame], character2.x, character2.y, RED);
+	}
+	else if (isCarryingBox)
+	{
+		if (character2.x >= 500 && character2.x <= 560 && character2.y >= 900 && character2.y <= 1180)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				mailbox = !mailbox;
+			}
+		}
+		DrawTexture(idleBox[frame], character2.x, character2.y, RED);
+	}
+	else if (isCarryingExtinguisher && IsKeyDown(KEY_P))
+	{
+		DrawTexture(fireExtinguisher[frame], character2.x, character2.y, RED);
+
+		if (CheckCollisionPointRec(character2, fireArea))
+			extinguishTime += GetFrameTime();
+
+		if (extinguishTime >= 4.0f)
+		{
+			isCarryingExtinguisher = 0;
+			onFire = 0;
+			extinguishTime = 0.0f;
+			pauseMusic = 0;
+			StopSound(emergencySound);
+		}
+	}
+	else
+	{
+		if (character2.x >= 800 && character2.x <= 920 && character2.y >= 580 && character2.y <= 700)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				periodicTable = !periodicTable;
+			}
+		}
+		else if (character2.x >= 1400 && character2.x <= 1500 && character2.y >= 60 && character2.y <= 120)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				musicPlayer = !musicPlayer;
+			}
+		}
+		else if (character2.x >= 1000 && character2.x <= 1190 && character2.y >= 580 && character2.y <= 720)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				chemistryShelf = !chemistryShelf;
+			}
+		}
+		else if (character2.x >= -50 && character2.x <= 50 && character2.y >= 650 && character2.y <= 720)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				reactor = !reactor;
+			}
+		}
+		else if (character2.x >= 880 && character2.x <= 1080 && character2.y >= 250 && character2.y <= 370)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				packaging = !packaging;
+			}
+		}
+		else if (character2.x >= 500 && character2.x <= 560 && character2.y >= 900 && character2.y <= 1180)
+		{
+			DrawTexture(interact[frame], character2.x, character2.y, RED);
+
+			if (IsKeyPressed(KEY_E))
+			{
+				mailbox = !mailbox;
+			}
+		}
+		else
+		{
+			DrawTexture(idle[frame], character2.x, character2.y, RED);
+		}
+	}
+}
+*/
 void Game::isMusicPaused()
 {
 	if (pauseMusic) PauseMusicStream(music[musicIndex]);
@@ -653,6 +927,7 @@ void Game::drawChemistryShelf()
 		{
 			if (GetMouseX() >= 475 + i * 171 && GetMouseX() <= 590 + i * 171 && GetMouseY() >= 400 && GetMouseY() <= 510 && selectedElement == -1)
 			{
+				PlaySound(elementSound);
 				selectedElement = i;
 			}
 		}
@@ -704,6 +979,8 @@ void Game::drawReactor()
 	}
 	else if (((IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && GetMouseX() >= 770 && GetMouseX() <= 1000 && GetMouseY() >= 760 && GetMouseY() <= 870) || IsKeyReleased(KEY_SPACE)) && selectedElement == -1)
 	{
+		PlaySound(reactorSound);
+
 		// Reactions
 		if ((reaction[0] == 0 && reaction[1] == 1) || (reaction[0] == 1 && reaction[1] == 0))
 		{
@@ -821,7 +1098,8 @@ void Game::drawReactor()
 		{
 			reactor = 0;
 			onFire = 1; // Start a fire
-			if (onFire) isCarryingExtinguisher = 1; // Pick up the fire extinguisher
+			isCarryingExtinguisher = 1; // Pick up the fire extinguisher
+			pauseMusic = 1;
 		}
 
 		reaction[0] = -1;
@@ -852,9 +1130,9 @@ void Game::drawReactor()
 
 		if (GetMouseX() >= 370 && GetMouseX() <= 510 && GetMouseY() >= 725 && GetMouseY() <= 865 && selectedElement == -1)
 		{
-
 			selectedElement = reaction[2];
 		}
+
 	}
 	else
 	{
@@ -864,6 +1142,11 @@ void Game::drawReactor()
 			{
 				if (GetMouseX() >= 360 && GetMouseX() <= 525 && GetMouseY() >= 290 + i * 185 && GetMouseY() <= 425 + i * 185 && (i == 0 || i == 1))
 				{
+					if (selectedElement >= 6 && selectedElement <= 12)
+						PlaySound(glassSound);
+					else if (selectedElement != -1)
+						PlaySound(elementSound);
+
 					if (selectedElement == reaction[2])
 					{
 						reaction[2] = -1;
@@ -876,6 +1159,10 @@ void Game::drawReactor()
 				}
 				else if (GetMouseX() >= 830 + i * 170 && GetMouseX() <= 975 + i * 170 && GetMouseY() >= 400 && GetMouseY() <= 510)
 				{
+					if (selectedElement >= 6 && selectedElement <= 12)
+						PlaySound(glassSound);
+					else if (selectedElement != -1)
+						PlaySound(elementSound);
 
 					if (inventoryElements[i] == -1)
 					{
@@ -948,6 +1235,7 @@ void Game::drawPackageMenu()
 		// Pick up the package
 		if (IsKeyPressed(KEY_R))
 		{
+			PlaySound(packagingSound);
 			isCarryingBox = 1;
 			packaging = 0;
 		}
@@ -1009,6 +1297,8 @@ void Game::drawMailbox()
 {
 	if (isCarryingBox)
 	{
+		PlaySound(submitSound);
+
 		if (packageElement == orderElement)
 		{
 			streak++;
@@ -1047,6 +1337,8 @@ void Game::drawOrderMenu()
 
 void Game::drawOnFireAnimation()
 {
+	if(!IsSoundPlaying(emergencySound))
+		PlaySound(emergencySound);
 	DrawTexture(onFireTextures[frame], 0, 0, fire[frame]);
 }
 
@@ -1124,6 +1416,7 @@ void Game::loop()
 		drawOnFireAnimation();
 	}
 	drawCharacterAnimations();
+	//drawCharacter2Animations();
 	isMusicPaused();
 	isMenuOpened = 0;
 
